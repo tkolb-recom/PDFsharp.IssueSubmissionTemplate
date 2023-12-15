@@ -16,9 +16,11 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            // NET6FIX - will be removed
-            if (Capabilities.Build.IsCoreBuild)
-                GlobalFontSettings.FontResolver = new FailsafeFontResolver();
+            //// NET6FIX - will be removed
+            //if (Capabilities.Build.IsCoreBuild)
+            //    GlobalFontSettings.FontResolver = new FailsafeFontResolver();
+
+            GlobalFontSettings.FontResolver ??= NewFontResolver.Get();
 
             // Create a new PDF document.
             var document = new PdfDocument();
@@ -33,12 +35,32 @@ namespace HelloWorld
             // Get an XGraphics object for drawing on this page.
             var gfx = XGraphics.FromPdfPage(page);
 
-            // Create a font.
-            var font = new XFont("Verdana", 20, XFontStyleEx.BoldItalic);
 
-            // Draw the text.
-            gfx.DrawString("Minimal, reproducible example", font, XBrushes.Black,
-                new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
+            XPdfFontOptions options = new XPdfFontOptions(PdfFontEncoding.Unicode);
+
+            XFont font = new XFont("Segoe UI Emoji", 12, XFontStyleEx.Regular, options);
+            gfx.DrawString("😢", font, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
+
+            font = new XFont("Arial", 12, XFontStyleEx.Regular, options);
+            gfx.DrawString(font.Name, font, XBrushes.Black, new XRect(0, 25, page.Width, page.Height), XStringFormats.Center);
+            gfx.DrawString("\u2259\u221E\u2211", font, XBrushes.Red, new XRect(0, 40, page.Width, page.Height), XStringFormats.Center);
+
+            font = new XFont("Segoe UI", 12, XFontStyleEx.Regular, options);
+            gfx.DrawString(font.Name, font, XBrushes.Black, new XRect(0, 65, page.Width, page.Height), XStringFormats.Center);
+            gfx.DrawString("\u2259\u221E\u2211", font, XBrushes.Red, new XRect(0, 80, page.Width, page.Height), XStringFormats.Center);
+
+            font = new XFont("Times New Roman", 12, XFontStyleEx.Regular, options);
+            gfx.DrawString(font.Name, font, XBrushes.Black, new XRect(0, 105, page.Width, page.Height), XStringFormats.Center);
+            gfx.DrawString("\u2259\u221E\u2211", font, XBrushes.Red, new XRect(0, 120, page.Width, page.Height), XStringFormats.Center);
+
+            font = new XFont("Cambria Math", 12, XFontStyleEx.Regular, options);
+            gfx.DrawString(font.Name, font, XBrushes.Black, new XRect(0, 145, page.Width, page.Height), XStringFormats.Center);
+            gfx.DrawString("\u2259\u221E\u2211", font, XBrushes.Red, new XRect(0, 160, page.Width, page.Height), XStringFormats.Center);
+
+            font = new XFont("Arial Unicode MS", 12, XFontStyleEx.Regular, options);
+            gfx.DrawString(font.Name, font, XBrushes.Black, new XRect(0, 185, page.Width, page.Height), XStringFormats.Center);
+            gfx.DrawString("\u2259\u221E\u2211", font, XBrushes.Red, new XRect(0, 200, page.Width, page.Height), XStringFormats.Center);
+
 
             // Save the document...
             var filename = IOHelper.CreateTemporaryPdfFileName("IssueTemplate");
