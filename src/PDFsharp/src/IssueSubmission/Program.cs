@@ -7,8 +7,6 @@ using PdfSharp;
 using PdfSharp.Drawing;
 using PdfSharp.Fonts;
 using PdfSharp.Pdf;
-using PdfSharp.Quality;
-using PdfSharp.Snippets.Font;
 
 namespace HelloWorld
 {
@@ -16,9 +14,7 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            // NET6FIX - will be removed
-            if (Capabilities.Build.IsCoreBuild)
-                GlobalFontSettings.FontResolver = new FailsafeFontResolver();
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
             // Create a new PDF document.
             var document = new PdfDocument();
@@ -34,14 +30,16 @@ namespace HelloWorld
             var gfx = XGraphics.FromPdfPage(page);
 
             // Create a font.
-            var font = new XFont("Verdana", 20, XFontStyleEx.BoldItalic);
+            var font = new XFont("Arial", 20);
 
             // Draw the text.
             gfx.DrawString("Minimal, reproducible example", font, XBrushes.Black,
                 new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
 
             // Save the document...
-            var filename = IOHelper.CreateTemporaryPdfFileName("IssueTemplate");
+            var filename = Path.ChangeExtension(Path.GetRandomFileName(), "pdf");
+            filename = $"IssueTemplate-{filename}";
+
             Console.WriteLine($"Filename='{filename}'");
             document.Save(filename);
             // ...and start a viewer.
